@@ -55,7 +55,7 @@ function concertThis(artist){
         console.log("Venue: " + concert.venue.name);
         console.log("Location: " + concert.venue.city + "," +concert.veniue.country);
         console.log("Date: " + moment(concert.venue.datetime). format("MM/DD/YYYY"));
-        console.log("\n------------------------")
+        console.log("\n------------------------------------")
     });
 
 });
@@ -64,7 +64,19 @@ function concertThis(artist){
 
 function spotifyThis(song){
 
-    spotify.search({type: ""})
+    spotify.search({type: "track", query :song}, function(err, data){
+        if (err){
+            return console.log("Error: " +err);
+        }
+       var songInfo = data.tracks.items
+       
+       songInfo.forEach(function(eachSong){
+           console.log("Song: " + eachSong.name)
+           console.log("Artist: " + eachSong.artist [0].name);
+           console.log("Link: " + eachSong.external_urls.spotify);
+           console.log("\n----------------------------------")
+       })
+    })
 }
  
 
