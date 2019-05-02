@@ -5,7 +5,7 @@ var keys = require("./keys.js");
 
 var spotify = new Spotify(keys.spotify);
 
-var omdb = require ("omdb")
+var omdb = require ("omdb");
 
 var axios = require("axios");
 
@@ -35,15 +35,15 @@ var selector = function(command, userInput){
 
 
 
-    }
-}
+    };
+};
 
 // Constructor for user input
 
 var run = function (arg1, arg2){
     selector(arg1, arg2);
 
-}
+};
 run(process.argv[2], process.argv[3]);
 
 
@@ -60,7 +60,7 @@ function concertThis(artist){
 
 });
 
-}
+};
 
 function spotifyThis(song){
 
@@ -75,9 +75,24 @@ function spotifyThis(song){
            console.log("Artist: " + eachSong.artist [0].name);
            console.log("Link: " + eachSong.external_urls.spotify);
            console.log("\n----------------------------------")
-       })
-    })
-}
+       });
+    });
+};
  
+function movieThis(movie){
+    omdb.search(movie, function (err, data){
+        if(err){
+        return console.error(err);
+    }
 
+    if (data.length < 1){
+        return console.log("Movies not found!");
+    }
+    data.forEach(function(movieInfo){
+        console.log("Movie name: " + movieInfo.title);
+        console.log("Year: "+ movieInfo.year);
+        console.log("Rating: " + movieInfo.rating);
+    });
+    });
+};
 
