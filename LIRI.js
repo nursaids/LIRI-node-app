@@ -80,3 +80,68 @@ function concertThis(artist){
   });
      
 };
+
+function spotifyThisSong(song){
+    if(song.length === 0){
+        song = 'Bohemian rhapsody';
+    }
+    spotify
+    .search({type: 'track', query: song})
+    .then((response) => {
+        const firstTrack = response.tracks.items[0];
+
+    log(`
+        Artist: $(firstTrack.artists[0].name)
+        Song Name: $(firstTrack.name)
+        Preview Link: ${firstTrack.preview_url || firstTrack.external_urls.spotify}
+        Album: ${firstTrack.album.name}
+       \n`)    
+    })
+
+    .catch((error)=>{
+        log('error getting song info', error, '\n');
+    });
+}
+
+function movieThis(movie){
+    if(movie.legth === 0){
+        movie = "Pulp Fiction"
+    }
+    axios.get(`http://www.omdbapi.com/?t=${encodeURI(movie)}&apikey=${keys.omdbapi.apiKey}`)
+   
+    .then((response) =>{
+        response.data 
+    
+        log(`
+    
+        Title: ${response.data.Title}
+        Year: ${response.data.Year}
+        IMDB Rating: ${response.data.Ratings.filter(r => r.Source === 'Internet Movie Database')[0].Value}
+        RT Rating: ${response.data.Ratings.filter(r => r.Source === 'Rotten Tomatoes')[0].Value}
+        Country: ${response.data.Country}
+        Language: ${response.data.Language}
+        Actors: ${response.data.Plot}\n`);
+    })
+
+   .catch((error)=>{
+       log('error getting movie info', error, '/n');
+   });
+
+}
+
+function weather(city){
+    if (city.length === 0){
+        city = 'Bellevue'
+    }
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURI(city)}&appid=${keys.openweather.apiKey}`
+    .then(response =>{
+        log(`
+        The weather in ${response.data.name} is currently ${response.data.weather[0].description}.
+
+        `)
+    })
+    .catch(err =>{
+        log(`Error getting weather.` , err, '\n');
+
+    });
+}
