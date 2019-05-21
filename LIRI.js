@@ -129,11 +129,11 @@ function movieThis(movie){
 
 }
 
-function weather(city){
+function weatherHere(city){
     if (city.length === 0){
         city = 'Bellevue'
     }
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURI(city)}&appid=${keys.openweather.apiKey}`
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURI(city)}&appid=${keys.openweather.apiKey}`)
     .then(response =>{
         log(`
         The weather in ${response.data.name} is currently ${response.data.weather[0].description}.
@@ -142,6 +142,28 @@ function weather(city){
     })
     .catch(err =>{
         log(`Error getting weather.` , err, '\n');
+
+    })
+}
+
+function doWhatItSays(){
+
+    const reader = rl.createInterface({
+        input: fs.createReadStream('random.txt')
+    });
+
+    reader.on('line', (line) =>{
+        let lineArr =line.split(`,`);
+        const command = lineArr[0];
+        const parameter = lineArr[1].slice(1,-1);
+        processCommand(command, parameter);
+    });
+}
+
+function log(message){
+    fs.appendFile('log.txt', message, (err) => {
+        if (err) throw err;
+        console.log(message);
 
     });
 }
