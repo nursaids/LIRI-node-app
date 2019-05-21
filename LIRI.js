@@ -1,98 +1,82 @@
 
 require("dotenv").config();
 
-var keys = require("./keys.js");
+const keys = require("./keys.js");
 
-var spotify = new Spotify(keys.spotify);
+const Spotify = require('node-spotify-api');
 
-var omdb = require ("omdb");
+const rl = require('readline')
 
-var axios = require("axios");
+const axios = require('axios');
 
-var moment = require ("moment");
+const moment = require ('moment');
 
-var selector = function(command, userInput){
-    switch (command){
-        
-        case "concert-this":
-        concertThis(userInput);
-        break;
+const fs = require ('fs');
 
-        case "spotify-this":
-        spotifyThis(userInput);
-        break;
+const spotify = new Spotify(keys.spotify);
 
-        case "movie-this":
-        movieThis(userInput);
-        break;
+const validCommands = [
+    'concert-this',
+    'spotify-this-song',
+    'movie-this',
+    'weather-here',
+    'do-what-it-says'
 
-        case "doWhatItSays":
-        break;
+];
 
-        default:
+const command = process.argv[2];
 
-        console.log("Dont know that")
+if (validCommands.indexOf(command)=== -1){
+    log('invalid command\n');
+    return;
 
+}
 
+let parameter;
+if(command !== 'do-what-it-says'){
+    
+  parameter = process.argv.slice(2).join(' ');
 
-    };
-};
+}
 
-// Constructor for user input
+function processCommand(command, parameter){
+    switch(command){
+        case 'concert-this':
+             concertThis(parameter);
+            break;
+        case 'spotify-this-song':
+            spotifyThisSong(parameter);
+            break;
+        case 'movie-this':
+            movieThis(parameter);
+            break;
+        case 'weather-here':
+            weatherHere(parameter);
+            break;
+        case 'do-what-it-says':
+            doWhatItSays();
+            break;
+        defailt:
+            log('Cant interpet command\n');
+            return;       
 
-var run = function (arg1, arg2){
-    selector(arg1, arg2);
-
-};
-run(process.argv[2], process.argv[3]);
-
+    }
+}
+processCommand(command, parameter);
 
 function concertThis(artist){
-    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp") 
-.then(function(response){
-    console.log(response.data);
-    response.data.forEach(function(concert){
-        console.log("Venue: " + concert.venue.name);
-        console.log("Location: " + concert.venue.city + "," +concert.veniue.country);
-        console.log("Date: " + moment(concert.venue.datetime). format("MM/DD/YYYY"));
-        console.log("\n------------------------------------")
-    });
+   
+    axios.get(`https://rest.bandsintown.com/artists/${encodeURI(artist)}/events?app_id=${keys.bandsintown.apiKey}`)
+  .then((response) => {
+      const concert = response.data[0];
+      log(`
+      Venue: ${concert.venue.name}
+      City: ${concert.venue.city}, ${concert.venue.region || concert.venue.country}
+      Date: ${moment(concert.datetime).format(MM/DD/YYYY)}\n`);
+  })
 
-});
-
+  .catch((error) =>{
+      log("error getting concerts", error, '\n');
+  });
+     
 };
-
-function spotifyThis(song){
-
-    spotify.search({type: "track", query :song}, function(err, data){
-        if (err){
-            return console.log("Error: " +err);
-        }
-       var songInfo = data.tracks.items
-       
-       songInfo.forEach(function(eachSong){
-           console.log("Song: " + eachSong.name)
-           console.log("Artist: " + eachSong.artist [0].name);
-           console.log("Link: " + eachSong.external_urls.spotify);
-           console.log("\n----------------------------------")
-       });
-    });
-};
- 
-function movieThis(movie){
-    omdb.search(movie, function (err, data){
-        if(err){
-        return console.error(err);
-    }
-
-    if (data.length < 1){
-        return console.log("Movies not found!");
-    }
-    data.forEach(function(movieInfo){
-        console.log("Movie name: " + movieInfo.title);
-        console.log("Year: "+ movieInfo.year);
-        console.log("Rating: " + movieInfo.rating);
-    });
-    });
-};
-

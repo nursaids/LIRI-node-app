@@ -1,7 +1,6 @@
 {
-  "name": "LIRI-node-app",
+  "name": "liri-node-app",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,5 +15,6 @@
   "bugs": {
     "url": "https://github.com/nursaids/LIRI-node-app/issues"
   },
-  "homepage": "https://github.com/nursaids/LIRI-node-app#readme"
+  "homepage": "https://github.com/nursaids/LIRI-node-app#readme",
+  "description": ""
 }
