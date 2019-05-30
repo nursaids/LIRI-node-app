@@ -4,10 +4,10 @@ LIRI is like iPhone's SIRI. However, while SIRI is a Speech Interpretation and R
 
 ## Commands
 
-#concert-this
-#spotify-this-song
-#movie-this
-#do-what-it-says
+* concert-this
+* spotify-this-song
+* movie-this
+* do-what-it-says
 
 ## concert-this
 
